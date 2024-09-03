@@ -1,3 +1,3 @@
-data "azurerm_resource_group" "studentXX" {
-  name = "studentXX"
+data "google_project" "studentXX" {
+    project_id = "prj-studentXX"
 }
