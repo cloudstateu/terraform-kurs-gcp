@@ -1,22 +1,22 @@
 #  Zadania z bieżącego oraz kolejnych laboratoriów wykonuj w folderze/konfiguracji Terraform z Lab1 Zadanie2
 
-## Zadanie 1 - Storage Account
+## Zadanie 1 - Cloud Storage
 
 Celem tego zadania jest nauczenie się importowania zasobów do stanu.
 
-W ramach tego zadania należy utworzyć zasób Storage Account ręcznie w Azure, przygotować kod Terraform reprezentujący
+W ramach tego zadania należy utworzyć zasób Cloud Storage (Bucket) ręcznie w GCP, przygotować kod Terraform reprezentujący
 dany zasób i zaimportować zasób do stanu przy pomocy polecenia `terraform import`.
 
 Aby zrealizować to zadanie, należy wykonać następujące kroki:
 
-1. Utwórz zasób Storage Account w portalu Azure. Użyj tego samego regionu, w którym znajduje się Twoja grupa zasobów.
-2. Przygotuj reprezentacje storage account w nowym pliku Terraform nazwanym `storage.tf`.
+1. Utwórz zasób Cloud Storage w portalu GCP. Wskaż `europe-west1` jako region dla tworzonego zasobu.
+2. Przygotuj reprezentacje Bucket'a w nowym pliku Terraform nazwanym `storage.tf`.
 3. Zaimportuj utworzony zasób przy pomocy polecenia `terraform import`.
 4. Sprawdź zmiany w pliku stanu po zaimportowaniu zasobu.
 5. Uruchom polecenie `terraform plan` w celu sprawdzenia zgodności opisanego zasobu ze znajdującym się w chmurze.
 
 Pomoce linki:
-* [Zasób azurerm_storage_account](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account)
+* [Zasób google_storage_bucket](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket)
 * [Polecenie terraform import](https://developer.hashicorp.com/terraform/cli/commands/import)
 
 

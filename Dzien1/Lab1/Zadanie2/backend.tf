@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket  = "student0-tfstate"
+    bucket  = "xxx"
     prefix  = "tfstate"
   }
 }
