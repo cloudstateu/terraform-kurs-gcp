@@ -20,34 +20,29 @@ Pomoce linki:
 * [Polecenie terraform import](https://developer.hashicorp.com/terraform/cli/commands/import)
 
 
-## Zadanie 2 - Key Vault
+## Zadanie 2 - Cloud Secret Manager
 
-Celem tego zadania jest nauczenie się tworzenia zasobów w chmurze Azure przy użyciu Terraform.
+Celem tego zadania jest nauczenie się tworzenia zasobów w chmurze GCP przy użyciu Terraform.
 
-W ramach tego zadania należy dodać do konfiguracji z zadania poprzedniego tworzenie nowego zasobu Azure Key Vault w pobranej
-przy pomocy Data grupie zasobów. Podczas konfiguracji zasobu Azure Key Vault nadaj uprawnienia swojemu użytkownikowi do 
-pobierania i tworzenia sekretów.
+W ramach tego zadania należy dodać do konfiguracji z zadania poprzedniego tworzenie nowego zasobu Google Cloud Secret Manager Secret w projekcie pobranym
+przy pomocy bloku data.
 
 Aby zrealizować to zadanie, należy wykonać następujące kroki:
 
-1. Do pliku `data.tf` dodaj nowy blok data typu `azurerm_client_config`. Zawiera on informacje na temat aktualnie
-   skonfigurowanego klienta w providerze. W naszym przypadku będzie to aktualnie zalogowany użytkownik.
-2. W nowo utworzonym pliku `keyvault.tf`skonfiguruj blok zasobu dla usługi Azure Key Vault. Podczas
-   konfigurowania zasobu wykorzystaj w odpowiednich parametrach referencje do pobieranej grupy zasobów. W
-   bloku `access_policy` skonfiguruj uprawnienia dla swojego użytkownika.
-   * Podczas tworzenia zasobu wybierz sku: Standard
-   * Wartości object_id oraz tenant_id dla swojego użytkownika może pobrać z portalu lub wykorzystując data
-   source `azurerm_client_config`.
-3. Uruchom polecenie `terraform plan`. Sprawdź, czy Terraform wykrył błędy w konfiguracji. Zwróć uwagę na wynik planu,
-   Terraform powinien zwrócić, że utworzy jeden nowy zasób.
-4. Uruchom polecenie `terraform apply`, aby wdrożyć zasób Azure Key Vault.
-5. Zweryfikuj, czy utworzenie zasobu przebiegło pomyślnie przez wyszukanie zasobu w portalu Azure.
+1. Przed rozpoczęciem ćwiczenia należy włączyc odpowiednie API na poziomie projektu. W tym celu wywołaj następująca komende uzupełniajac odpowiednią nazwe 
+   projektu `gcloud services enable secretmanager.googleapis.com --project prj-studentXX`
+2. W nowo utworzonym pliku `secrets.tf`skonfiguruj blok zasobu dla usługi Google Cloud Secret Manager Secret. Podczas konfigurowania zasobu wykorzystaj w 
+   odpowiednim argumencie referencje do projektu pobieranego za pomoca bloku data. Postaraj się stworzyć jak najprostszą definicje sekretu na podstawie 
+   przykładów z dokumentacji.
+3. Uruchom polecenie `terraform plan`. Sprawdź, czy Terraform wykrył błędy w konfiguracji. Zwróć uwagę na wynik planu - Terraform powinien zwrócić plan 
+   utworzenia jednego nowego zasobu.
+4. Uruchom polecenie `terraform apply`, aby wdrożyć zasób Secret.
+5. Zweryfikuj, czy utworzenie zasobu przebiegło pomyślnie przez wyszukanie zasobu w portalu GCP.
 6. Sprawdź, jakie zmiany powstały w pliku stanu, zwróć uwagę na różnice pomiędzy `data` a `resource`.
 
 Pomocne linki:
 
-* [Zasób azurerm_key_vault](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault)
-* [Data azurerm_client_config](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config)
+* [Zasób google_secret_manager_secret](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret)
 
 
 ## Zadanie 3 - Virtual Network Shared
