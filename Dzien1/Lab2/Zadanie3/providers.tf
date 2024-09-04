@@ -1,14 +1,13 @@
 terraform {
   required_providers {
-    azurerm = {
-      source = "hashicorp/azurerm"
-      version = "3.40.0"
+    google = {
+      source  = "hashicorp/google"
+      version = "5.40.0"
     }
   }
 }
 
-provider "azurerm" {
-  # Configuration options
-  features {}
-  subscription_id = "__ID__TWOJEJ__SUBSKRYPCJI__"
+provider "google" {
+  project = "__ID__TWOJEGO__PROJEKTU__"
+  region  = "europe-west1"
 }

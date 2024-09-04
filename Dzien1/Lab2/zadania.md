@@ -45,39 +45,44 @@ Pomocne linki:
 * [Zasób google_secret_manager_secret](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret)
 
 
-## Zadanie 3 - Virtual Network Shared
+## Zadanie 3 - Virtual Private Cloud (VPC) Shared network
 
 Celem tego zadania jest nauczenie się korzystania ze zmiennych.
 
-W ramach tego zadania należy stworzyć sieć wirtualną `vnet-shared` oraz podsieć `endpoints` przy pomocy zasobów 
-`azurerm_virtual_network` oraz `azurerm_subnet`. Nazwy zasobów i zakresy sieciowe sieci/podsieci umieść w zmiennych.
-Wykorzystaj zmienną lokalną do wymuszenia prefixu w nazwach zasobów z Twoim numerem studenta.
-Zasoby umieść w przygotowanej dla Ciebie grupie zasobów.
+W ramach tego zadania należy stworzyć sieć wirtualną `vpc-shared` oraz podsieć `jumphost` przy pomocy zasobów 
+`google_compute_network` oraz `google_compute_subnetwork`. W tym celu włącz również odpowiednie API za pomocą zasobu
+`google_project_service`. Nazwy zasobów i zakres podsieci umieść w zmiennych. Wykorzystaj zmienną lokalną do wymuszenia 
+prefixu w nazwach zasobów z Twoim numerem studenta. Zasoby umieść w przygotowanej dla Ciebie projekcie.
 
 Aby zrealizować to zadanie, należy wykonać następujące kroki:
 
-1. Utwórz plik `variables.tf` i zdefiniuj w nim zmienne: `vnet_name`, `subnet_name`, `vnet_address_space` i `subnet_address_prefixes`.
-2. Dodaj do pliku `variables.tf` zmienną lokalną `prefix`, która będzie zawierać Twój numer kursanta. Wykorzystasz go jako prefix dodawany
+1. Utwórz plik `variables.tf` i zdefiniuj w nim zmienne typu string: `vpc_shared_name`, `sbn_jh_name` oraz `sbn_jh_range`.
+2. Dodaj do pliku `variables.tf` zmienną lokalną `prefix`, która będzie zawierać całą nazwę lub sam numer Twojego kursanta. Wykorzystasz go jako prefix dodawany
    na początku lub końcu nazw tworzonych zasobów.*
-3. Utwórz plik `network.tf` i dodaj do niego zasoby `azurerm_virtual_network` i `azurerm_subnet`, skonfiguruj je z wykorzystaniem zmiennych i zmiennych lokalnych.
-4. Utwórz plik `terraform.tfvars` i przypisz wartości do zmiennej.
-5. Uruchom polecenie `terraform plan`. Sprawdź, czy Terraform wykrył błędy w konfiguracji.
-6. Uruchom polecenie `terraform apply`, aby powołać nowe zasoby.
-7. Spróbuj przekazać wartość zmiennej do konfiguracji Terraform na inne sposoby np. z poziomu opcji CLI -var, zmiennych
+3. Utwórz plik `network.tf` i stwórz w nim definicje zasobu `google_project_service`. Wykorzystaj go do włączenia API `compute.googleapis.com` na poziomie 
+   swojego projektu. Dzięki temu będziesz mógł powołać m.in. zasoby sieciowe.
+4. Dodaj definicje potrzebnych zasobów sieciowych tj. `google_compute_network` i `google_compute_subnetwork`. Skonfiguruj je z wykorzystaniem zmiennych oraz 
+   zmiennych lokalnych. Dodaj zależność pomiędzy zasobem VPC oraz włączeniem serwisu (API) z poprzedniego punktu. W tym celu wykorzystaj argument `depends_on`. Zasób
+   podsieci nie potrzebuje tej zależności ponieważ przy dynamicznym wskazaniu sieci automatycznie zostanie od niej uzależniony.
+5. Utwórz plik `terraform.tfvars` i przypisz wartości do każdej zmiennej.
+6. Uruchom polecenie `terraform plan`. Sprawdź, czy Terraform wykrył błędy w konfiguracji.
+7. Uruchom polecenie `terraform apply`, aby powołać nowe zasoby.
+8. Spróbuj przekazać wartość zmiennej do konfiguracji Terraform na inne sposoby np. z poziomu opcji CLI -var, zmiennych
    środowiskowych TF_VAR_. Spróbuj przekazać wartość na kilka sposób jednocześnie i sprawdź efekt.*
 
 
 Pomocne linki:
 
-* [Zasób azurerm_virtual_network](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network)
-* [Zasób azurerm_subnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet)
+* [Zasób google_project_service](https://registry.terraform.io/providers/hashicorp/google/5.43.1/docs/resources/google_project_service)
+* [Zasób google_compute_network](https://registry.terraform.io/providers/hashicorp/google/5.43.1/docs/resources/compute_network)
+* [Zasób google_compute_subnetwork](https://registry.terraform.io/providers/hashicorp/google/5.43.1/docs/resources/compute_subnetwork)
 * [Zmienne w terraform](https://developer.hashicorp.com/terraform/language/values/variables)
 * [Pierwszeństwo definicji zmiennych](https://developer.hashicorp.com/terraform/language/values/variables#variable-definition-precedence)
 
 
-## Zadanie 4 - File Share (Zadanie opcjonalne)
+## Zadanie 4 - Filestore (Zadanie opcjonalne)
 
-Do utworzonego wcześniej Azure Storage Account nalezy zdefiniować utworzenie Azure Storage File Share.
+Należy zdefiniować utworzenie instancji Google Cloud Filestore.
 Azure Storage File Share zostanie podłączony do naszej aplikacji w celu przechowywania plików.
 
 Na co warto zwrócić uwagę:
