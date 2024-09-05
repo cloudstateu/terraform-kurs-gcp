@@ -96,23 +96,24 @@ Na co warto zwrócić uwagę:
 Pomocne linki:
 
 * [Zasób google_project_service](https://registry.terraform.io/providers/hashicorp/google/5.43.1/docs/resources/google_project_service)
-* [Dokumentacja Filestore](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/filestore_instance)
+* [Zasób google_filestore_instance](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/filestore_instance)
 
-## Zadanie 5 - Container Registry
+## Zadanie 5 - Artifact Registry
 
-W ramach tego zadania należy utworzyć Azure Container Registry, w którym przechowywane będą obrazy aplikacji.
+W ramach tego zadania należy utworzyć Google Artifact Registry, w którym przechowywane będą obrazy aplikacji.
 
 Na co warto zwrócić uwagę:
 
-* Stwórz nowy plik i nazwyj go np. `acr.tf`.
-* ACR będzie współdzielony pomiędzy środowiskami, dlatego w kolejnych zadaniach będzie umieszczony w sieci Shared,
-* Podczas tworzenia zasobu wybierz sku: `Premium`, tylko w tym planie jest dostępna możliwość komunikacji prywatnej.
-* Stwórz zasób z włączoną opcją użytkownika typu administrator definiując odpowiedni argument wraz z wartością.
-* Zablokuj dostep publiczny do tworzonej usługi definiując odpowiedni argument wraz z wartością.
+* Stwórz nowy plik i nazwyj go np. `areg.tf`.
+* W nowym pliku zapisz definicję Artifact Registry. Wskaż format jako docker.
+* Stwórz dwie polityki czyszczące:
+ - polityka do usuwania obrazów z tagiem `legacy`
+ - polityka do usuwania obrazów nieotagowanych, starszych niż 100 dni - zapisz w tym celu przeliczenie wskazanego czasu na sekundy
+
 
 Pomocne linki:
 
-* [Dokumentacja zasobu azurerm_container_registry](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_registry)
+* [Zasób google_artifact_registry_repository](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/artifact_registry_repository)
 
 ## Zadanie 6 - DNS Zone/Private Endpoint
 
