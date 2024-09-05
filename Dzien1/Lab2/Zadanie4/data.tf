@@ -1,6 +1,3 @@
-data "azurerm_resource_group" "studentXX" {
-  name = "studentXX"
-}
-
-data "azurerm_client_config" "current" {
+data "google_project" "studentXX" {
+    project_id = "prj-studentXX"
 }

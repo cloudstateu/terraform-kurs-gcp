@@ -83,18 +83,20 @@ Pomocne linki:
 ## Zadanie 4 - Filestore (Zadanie opcjonalne)
 
 Należy zdefiniować utworzenie instancji Google Cloud Filestore.
-Azure Storage File Share zostanie podłączony do naszej aplikacji w celu przechowywania plików.
+Wspomniany serwis może zostać podłączony do naszej aplikacji w celu przechowywania plików.
 
 Na co warto zwrócić uwagę:
 
-* Wykorzystaj istniejący plik `storage.tf` lub stwórz nowy, dedykowany dla zasobu File Share.
-* Podczas tworzenia File Share wybierz Quota: 50gb.
-* Zasób ten będzie dedykowany dla środowiska aplikacji.
+* Wykorzystaj istniejący plik `storage.tf` lub stwórz nowy, dedykowany dla zasobu Filestore.
+* Przed stworzeniem serwisu będziesz musiał/a włączyć API `file.googleapis.com`. Zadbaj również o konfiguracje zależności.
+* Podczas tworzenia Filestore wybierz tier BASIC HDD oraz capacity 1024gb.
+* Połącz zasób z siecią VPC shared.
+* Podobnie jak w przypadku sieci możesz użyć swojego prefixu w nazwie zasobu.
 
 Pomocne linki:
 
-* [Dokumentacja Storage Account](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account)
-* [Dokumentacja Storage Share](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_share)
+* [Zasób google_project_service](https://registry.terraform.io/providers/hashicorp/google/5.43.1/docs/resources/google_project_service)
+* [Dokumentacja Filestore](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/filestore_instance)
 
 ## Zadanie 5 - Container Registry
 

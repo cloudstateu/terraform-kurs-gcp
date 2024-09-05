@@ -12,7 +12,7 @@ Aby zrealizować to zadanie, należy wykonać następujące kroki:
 1. Zaloguj się z wykorzystaniem przypisanego do Ciebie konta do portalu GCP pod adresem `https://console.cloud.google.com`. Następnie w nowym oknie otwórz Cloud Shell
    Editor np. poprzez wskazany link `https://ide.cloud.google.com`.
 2. Przygotuj folder dla swoich plików Terraform. W nim utwórz plik `providers.tf` i skonfiguruj w nim providera Google. Zwróć uwagę, aby w konfiguracji providera wskazać
-   odpowiedni projekt (przypisany do twojego konta) oraz region `europe-west1`. Wskaż użycie konkretnej wersji providera: `5.40.0`.
+   odpowiedni projekt (przypisany do twojego konta), region `europe-west1` oraz zone `europe-west1-b`. Wymuś również użycie konkretnej wersji providera: `5.40.0`.
 3. Wykonaj inicjalizację konfiguracji przy pomocy komendy `terraform init`.
 4. Utwórz plik `data.tf` i dodaj w nim blok data typu `google_project`. Skonfiguruj go zgodnie z dokumentacją, tak aby pobrać Twój projekt.
 5. Uruchom polecenie `terraform plan`, aby sprawdzić, czy Terraform wykrył grupę zasobów i czy nie ma błędów w konfiguracji.

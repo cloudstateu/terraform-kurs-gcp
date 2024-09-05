@@ -1,13 +1,25 @@
-resource "azurerm_storage_account" "stgstudentXXkurstf" {
-  name                     = "stgstudentXXkurstf"
-  account_tier             = "Standard"
-  account_replication_type = "RAGRS"
-  location                 = data.azurerm_resource_group.studentXX.location
-  resource_group_name      = data.azurerm_resource_group.studentXX.name
+resource "google_storage_bucket" "studentXX" {
+  name          = "studentXX-bucket"
+  location      = "europe-west1"
 }
 
-resource "azurerm_storage_share" "filestudentXXkurstf" {
-  name                 = "filestudentXXkurstf"
-  storage_account_name = azurerm_storage_account.stgstudentXXkurstf.name
-  quota                = 50
+resource "google_project_service" "file" {
+  service = "file.googleapis.com"
+}
+
+resource "google_filestore_instance" "student0" {
+  name = "filest-${local.prefix}"
+  tier = "BASIC_HDD"
+
+  file_shares {
+    capacity_gb = 1024
+    name        = "share1"
+  }
+
+  networks {
+    network = google_compute_network.shared.name
+    modes   = ["MODE_IPV4"]
+  }
+
+  depends_on = [google_project_service.file]
 }
