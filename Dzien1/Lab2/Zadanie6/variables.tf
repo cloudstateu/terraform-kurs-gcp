@@ -1,19 +1,15 @@
-variable "vnet_name" {
+variable "vpc_shared_name" {
   type = string
 }
 
-variable "subnet_name" {
+variable "sbn_jh_name" {
   type = string
 }
 
-variable "vnet_address_space" {
-  type = list(string)
-}
-
-variable "subnet_address_prefixes" {
-  type = list(string)
+variable "sbn_jh_range" {
+  type = string
 }
 
 locals {
-  prefix = "student0"
+  prefix = "studentX"
 }

@@ -115,40 +115,32 @@ Pomocne linki:
 
 * [Zasób google_artifact_registry_repository](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/artifact_registry_repository)
 
-## Zadanie 6 - DNS Zone/Private Endpoint
+## Zadanie 6 - DNS Zone
 
-W tym zadaniu utworzymy private endpoint dla Azure Container Registry, tak aby usługa wykorzystywała do komunikacji sieć prywatną.
-
-Przed przystąpieniem do utworzenia private endpoint, należy utworzyć prywatną strefę DNS oraz powiązać ją z siecią wirtualną.
-Nazwę strefy DNS przekaż w formie zmiennej lokalnej. Użyj zmiennej, w postaci mapy `map(string)`, w której kluczem będzie skrócona nazwa usługi,
-a wartością nazwa strefy DNS.
-Prywatne strefy DNS wykorzystywane przez private endpoint powinny korzystać z zalecanych nazw.
+W tym zadaniu należy utworzyć prywatną strefę DNS, powiązaną z obecną już siecią wirtualną. Nazwę strefy DNS przekaż w formie zmiennej lokalnej. Użyj zmiennej, w postaci mapy `map(string)`, w której kluczem będzie oznaczenie sieci do której strefa będzie przypisana, czyli `shared`, a wartością nazwa strefy DNS np. `share.kurstf.com.`. 
+W opisie strefy wykorzystaj wartość klucza ze stworzonej zmiennej typu mapa i dodatkowo zapisz go w postaci dużych liter. Wykorzystaj w tym celu funkcje Terraform.
 
 Przykład zmiennej lokalnej typu `map(string)`:
 
 ```terraform
 locals {
   zones = {
-    "file"       = "privatelink.file.core.windows.net"
-    "postgresql" = "privatelink.postgres.database.azure.com"
+    file       = "privatelink.file.core.windows.net"
+    postgresql = "privatelink.postgres.database.azure.com"
   }
 }
 ```
 
 Na co warto zwrócić uwagę:
 
-* Dla przejrzystości kodu, utwórz nowe dedykowane pliki np. `dns.tf` oraz `endpoints.tf`.
-* W bloku `private_service_connection` podczas tworzenia private endpoint, należy wskazać id zasobu, dla którego
-  tworzymy endpoint oraz nazwę zasobu podrzędnego. Wyszukaj jej wartość w dokumentacji.
-* W bloku `private_dns_zone_group` podczas tworzenia private endpoint należy wskazać id prywatnej strefy dns, dzięki temu
-  odpowiedni rekord A wskazujący na interfejs sieciowy endpointu zostanie automatycznie dodany.
-* W parametrze `subnet_id` podczas tworzenia private endpoint należy wskazać podsieć przeznaczoną na private endpoint.
-   będzie to podsieć `endpoints`w sieci `vnet-shared`.
+* Dla przejrzystości kodu, utwórz nowy dedykowany pliki np. `dns.tf`.
+* Za pomoca odpowiedniego argumentu opisz strefę jako prywatną.
+* Za pomocą odpowiedniego argumentu powiąż zasób strefy DNS z siecią shared.
+* Nazwa strefy dns powinna być przekazana dynamicznie porpzez odniesienie do zmiennej lokalnej.
+* Oprócz zmiennej lokalnej typu mapa opisanej powyżej, możesz stworzyc dodatkową, w której pobierzesz wartość klucza za pomocą funkcji `keys`.
+* W nazwie zasobu lub opisie dodaj swój prefix/suffix a także za pomoca odpowiedniej funkcji zapisz dużymi literami nazwę klucza przekazując go dynamicznie.
 
 Pomocne linki:
 
-* [Zalecane nazwy prywatnych stref dns](https://learn.microsoft.com/pl-pl/azure/private-link/private-endpoint-dns#azure-services-dns-zone-configuration)
-* [Dostępne nazwy zasobów podrzędnych](https://learn.microsoft.com/en-gb/azure/private-link/private-endpoint-overview#private-link-resource)
-* [Dokumentacja zasobu private_endpoint](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint)
-* [Dokumentacja zasobu private_dns_zone](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/private_dns_zone)
-* [Dokumentacja zasobu private_dns_zone_virtual_network_link](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_zone_virtual_network_link)
+* [Funkcje Terraform](https://developer.hashicorp.com/terraform/language/functions)
+* [Zasób google_dns_managed_zone](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_managed_zone)

@@ -1,17 +1,20 @@
 locals {
   zones = {
-    "acr" = "privatelink.azurecr.io"
+    shared = "share.kurstf.com."
   }
+  zone_keys = keys(local.zones)
 }
 
-resource "azurerm_private_dns_zone" "acr" {
-  name                = local.zones.acr
-  resource_group_name = data.azurerm_resource_group.studentXX.name
-}
+resource "google_dns_managed_zone" "private" {
+  name        = "private-${local.zone_keys[0]}-${local.prefix}"
+  dns_name    = local.zones.shared
+  description = "${upper(local.zone_keys[0])} private DNS zone"
 
-resource "azurerm_private_dns_zone_virtual_network_link" "shared" {
-  name                  = "acr-shared"
-  private_dns_zone_name = azurerm_private_dns_zone.acr.name
-  virtual_network_id    = azurerm_virtual_network.shared.id
-  resource_group_name   = data.azurerm_resource_group.studentXX.name
+  visibility = "private"
+
+  private_visibility_config {
+    networks {
+      network_url = google_compute_network.shared.id
+    }
+  }
 }
