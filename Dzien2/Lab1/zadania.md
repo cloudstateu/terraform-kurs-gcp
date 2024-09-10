@@ -49,13 +49,18 @@ Pomocne linki:
 * [Zasób dns_managed_zone](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_managed_zone)
 
 
-## Zadanie 2 - Key Vault Secrets (Zadanie opcjonalne)
+## Zadanie 2 - Google API
 
-Celem tego zadania jest nauczenie się wykorzystania pętli count.
+Celem tego zadania jest nauczenie się wykorzystania pętli `count`.
 
-W ramach tego zadania należy utworzyć nową zmienną lokalną `passwords` typu `list(string)`.
-Dodaj do listy co najmniej dwa przykładowe hasła.
-Następnie przy pomocy `azurerm_key_vault_secret` i `count` utworzyć sekrety w Azure Key Vault.
+W ramach tego zadania należy utworzyć nową zmienną lokalną `gcp_api` typu `list(string)`. Niech zawiera ona nazwy API,
+które będziemy chcieli włączyć:
+- iam.googleapis.com
+- sqladmin.googleapis.com
+- container.googleapis.com
+- logging.googleapis.com
+- monitoring.googleapis.com
+Następnie przy pomocy `google_project_service` i `count` należy włączyć wszystkie wspomniane API.
 
 Przykład zmiennej lokalnej typu `list(string)`:
 
@@ -70,20 +75,20 @@ locals {
 
 Aby zrealizować to zadanie, należy wykonać następujące kroki:
 
-1. W pliku `keyvault.tf` utwórz nową zmienną lokalną o nazwie `passwords`.
-2. Dodaj nowy zasób typu `azurerm_key_vault_secret`. Podczas konfiguracji wykorzystaj pętlę`count` i zadbaj o unikalność 
-   nazw tworzonych sekretów. Wartość sekretu pobierz ze zmiennej lokalnej. Pamiętaj, że przy wykorzystaniu `count` masz
-   dostęp do słowa kluczowego `count` przy pomocy którego możesz odwołać się konkretnej iteracji np. `count.index`.
+1. Stwórz nowy plik i nazwij go np. `api.tf` i  utwórz nową zmienną lokalną o nazwie `gcp_api` zgodnie z treścią zadania.
+2. Dodaj nowy zasób typu `google_project_service`. Podczas konfiguracji wykorzystaj pętlę `count` oraz odpowiednią funkcję. 
+   Podając nazwę serwisu odwołaj się do zmiennej lokalnej. Pamiętaj, że przy wykorzystaniu tej pętli możesz odwołać się do 
+   konkretnej iteracji przez konstrukcję `count.index`.
 3. Uruchom polecenie `terraform plan`. Sprawdź, czy Terraform wykrył błędy w konfiguracji.
-4. Uruchom polecenie `terraform apply`, aby utworzyć sekret.
-5. Zweryfikuj, czy utworzenie sekretu przebiegło pomyślnie przez jego wyszukanie w Azure Key Vault.
-6. Dodaj kolejne hasła do zmiennej lokalnej np. na początku listy, na końcu i na środku. Uruchom ponownie
-   polecenie `terraform plan` i sprawdź, jak zachowa się Terraform wobec aktualnie istniejących sekretów.
+4. Uruchom polecenie `terraform apply`, aby wdrożyć zmiany.
+5. Zweryfikuj, czy wskazane API zostały poprawnie włączone.
+6. Dodaj kolejne pozycje do zmiennej lokalnej np. na początku listy, na końcu i w środku. Uruchom ponownie
+   polecenie `terraform plan` i sprawdź, jak zachowa się Terraform wobec aktualnie istniejących zasobów.
 7. Sprawdź jak przedstawiony jest zasób wykorzystujący `count` w pliku stanu.
 
 Pomocne linki:
 
-* [Zasób azurerm_key_vault_secret](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_secret)
+* [Zasób google_project_service](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_service)
 * [Pętla count](https://developer.hashicorp.com/terraform/language/meta-arguments/count)
 
 
