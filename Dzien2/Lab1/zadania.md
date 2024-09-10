@@ -92,31 +92,39 @@ Pomocne linki:
 * [Pętla count](https://developer.hashicorp.com/terraform/language/meta-arguments/count)
 
 
-## Zadanie: 3 - Log Analytics Workspace (Zadanie opcjonalne)
+## Zadanie: 3 - Firewall rules (Zadanie opcjonalne)
 
-Celem tego zadania jest nauczenie się wykorzystywania dynamic blocks.
+Celem tego zadania jest nauczenie się wykorzystywania konstrukcji dynamic blocks.
 
-W ramach tego zadania należy utworzyć zasób Log Analytics Workspace oraz skonfigurować przesyłanie do niego logów i metryk
-z usługi Azure Key Vault. W tym celu należy wykorzystać zasób `azurerm_monitor_diagnostic_setting` oraz pobrać dostępne 
-kategorie z wykorzystaniem bloku data `azurerm_monitor_diagnostic_categories`. Następnie udynamicznić bloki `enabled_log`
-oraz `metric` wykorzystując funkcjonalność dynamic block oraz pętlę for_each.
+W ramach tego zadania należy utworzyć reguły firewall dla ruchu wchodzącego (INGRESS) do obecnej podsieci jumphost. W tym celu 
+należy wykorzystać zasób `google_compute_firewall` i udynamicznić blok `allow` wykorzystując funkcjonalność dynamic block oraz 
+pętlę for_each. Skorzystaj z następującej zmiennej lokalnej zawierającą listę kombinacji protokołów i portów, które należy odblokować:
+
+```terraform
+locals {
+  protocols_and_ports = [
+    {
+      protocol = "tcp",
+      ports    = ["22"]
+    },
+    {
+      protocol = "udp",
+      ports    = ["53"]
+    }
+  ]
+}
+```
 
 Aby zrealizować to zadanie, należy wykonać następujące kroki:
-1. Utwórz nowy plik np. `monitoring.tf` i zdefiniuj w nim tworzenie zasobu Log Analytics: `azurerm_log_analytics_workspace`.
-2. Stwórz blok data typu `azurerm_monitor_diagnostic_categories` wskazując w argumencie `resource_id` ID Twojego Key Vault'a.
-   Dzięki temu będziesz mógł pobrać wszystkie dostępne do śledzenia katerogie logów i metryk dla zasobu Azure Key Vault.
-3. Zdefiniuj zasób `azurerm_monitor_diagnostic_setting`, w którym wskażesz wysyłanie logów z wybranego Azure Key Vault do
-   zdefiniowanego w pierwszym kroku Log Analytics Workspace.
-4. Wewnątrz zasobu Diagnostic Settings stwórz dynamiczne bloki `enabled_log` oraz `metric`. Za pomocą pętli `for_each`
-   iteruj po odpowiednio kategoriach logów (atrybut `log_category_types`) i metrykach (atrybut `metrics`) dostępnych dzięki 
-   pobranym w poprzednim pukncie zasobie Diagnostic Categories. W ten sposób definiujesz wysyłanie wszystkich dostepnych kategorii 
-   logów i metryk do wskazanego Log Analytics Workspace.
-5. Standardowo uruchom polecenia `terraform plan` aby zweryfikować swoją konifgurację oraz `terraform apply` aby wdrożyć zmiany.
-6. Zweryfikuj utworzenie Diagnostic Setting przez wyszukanie w Azure Key Vault.
+1. Utwórz nowy plik np. `fw.tf` i skopiuj do niego zmienną lokalną opisaną powyżej.
+2. Zdefiniuj zasób `google_compute_firewall`, w którym wskażesz odwołanie do sieci wirtualnej, odpowiedni kierunek ruchu, 
+   który będzie obsługiwany przez reguły oraz zakres podsieci jumphost jako zakres docelowy (destination_ranges).
+3. Wewnątrz definicji zasobu stwórz dynamiczny blok `allow`. Za pomocą pętli `for_each` iteruj po nowej zmiennej. Wewnątrz 
+   dynamicznego bloku odwołaj się do odpowiednich wartości ze zmiennej.
+4. Standardowo uruchom polecenia `terraform plan` aby zweryfikować swoją konifgurację oraz `terraform apply` aby wdrożyć zmiany.
+5. Zweryfikuj utworzenie reguł z poziomu portalu.
 
 Pomocne linki:
 
 * [Dokumentacja Dynamic Blocks](https://developer.hashicorp.com/terraform/language/expressions/dynamic-blocks)
-* [Dokumentacja Log Analytics Workspace](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/log_analytics_workspace)
-* [Dokumentacja Monitor Diagnostics Categories](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/monitor_diagnostic_categories)
-* [Dokumentacja Diagnostic Setting](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_diagnostic_setting)
+* [Zasób google_compute_firewall](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall)
