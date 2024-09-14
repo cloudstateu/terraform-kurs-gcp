@@ -136,7 +136,7 @@ Na co warto zwrócić uwagę:
 * Dla przejrzystości kodu, utwórz nowy dedykowany pliki np. `dns.tf`.
 * Za pomoca odpowiedniego argumentu opisz strefę jako prywatną.
 * Za pomocą odpowiedniego argumentu powiąż zasób strefy DNS z siecią shared.
-* Nazwa strefy dns powinna być przekazana dynamicznie porpzez odniesienie do zmiennej lokalnej.
+* Nazwa strefy dns powinna być przekazana dynamicznie poprzez odniesienie do zmiennej lokalnej.
 * Oprócz zmiennej lokalnej typu mapa opisanej powyżej, możesz stworzyc dodatkową, w której pobierzesz wartość klucza za pomocą funkcji `keys`.
 * W nazwie zasobu lub opisie dodaj swój prefix/suffix a także za pomoca odpowiedniej funkcji zapisz dużymi literami nazwę klucza przekazując go dynamicznie.
 
