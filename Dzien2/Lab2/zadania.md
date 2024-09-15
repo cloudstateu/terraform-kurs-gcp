@@ -22,74 +22,54 @@ Pomocne linki:
 
 * [Publiczny moduł compute](https://registry.terraform.io/modules/terraform-google-modules/address/google/latest)
 
-## Zadanie 2 - Virtual Networks/Peering
+## Zadanie 2 - VPC/Peering
 
 Celem tego zadania jest nauka tworzenia i wykorzystania własnych modułów.
 
-W ramach tego zadania należy utworzyć moduł składający się z pojedynczej sieci, połączonej peeringiem z siecią 
-`vnet-shared` stworzoną w poprzednich zadaniach. Pamiętaj, że peering należy skonfigurować w 2 strony, czyli 
-zarówno od tworzonej w module sieci jak i od sieci `vnet-shared`.
+W ramach tego zadania należy utworzyć moduł składający się z pojedynczej sieci VPC, połączonej peeringiem z siecią 
+`vpc-shared` stworzoną w poprzednich zadaniach. Pamiętaj, że peering należy skonfigurować w 2 strony, czyli zarówno 
+od tworzonej w module sieci jak i od sieci `vpc-shared`. Za pomoca modułu nalezy stworzyć sieci dla 2 środowisk: *dev* oraz *prod*.
 
-Zdefiniuj w module następujące zmienne:
-* vnet_name             - nazwa tworzonej sieci  
-* vnet_address_space    - zakres adresacji tworzonej sieci
-* rg_name               - nazwa wykorzystywanej w kursie resource grupy
-* location              - lokalizacja wykorzystywanych w kursie zasobów (np. z resource grupy)
+Zdefiniuj w module pojedynczą zmienną:
+* env - nazwa środowiska, które będzie reprezentować sieć  
 
 Aby zrealizować to zadanie, należy wykonać następujące kroki:
 
-1. Utwórz nowy folder, który przeznaczysz na stworzenie kodu modułu.
-2. W nowym folderze zacznij od stworzenia pliku ze zmiennymi `providers.tf`, w którym zdefiniujesz dostawców potrzebnych do
-   napisania kodu modułu. Ponieważ provider może byc przekazany z poziomu, na którym wywoływany będzie moduł, wystarczy
-   następująca konfiguracja:
-
-   ```terraform
-   terraform {
-   required_providers {
-      azurerm = {
-         source = "hashicorp/azurerm"
-         configuration_aliases = [
-         azurerm.network
-         ]
-      }
-   }
-   }
-   ```
-   Argument `configuration_aliases` pozwoli na odwołanie się z zewnątrz do providera wykorzystywanego wewnątrz modułu. Docelowo,
-   wykorzystasz go do przekazania providera wykorzystywanego na wyższym poziomie. W ten sposób konfiguracja providera zapisana
-   w miejscu, z którego będzie wywoływany moduł, może być przekazana i wykorzystana wewnątrz modułu.
-3. Stwórz plik `variables.tf` ze zmiennymi wymienionymi na początku zadania. Nadaj im odpowiedni typ. W większości będą to
-   mienne typu `string`, natomiast niektóre z nich, np. adress space możesz zdefiniować od razu jako listę stringów: `list(string)`
+1. Utwórz nowy folder, który przeznaczysz na stworzenie kodu modułu. Dobrą praktyką będzie nadanie mu takiej nazwy, która
+   pozwoli zidentyfikować że jest to moduł służący do powoływania sieci vpc.
+2. W nowym folderze zacznij od stworzenia pliku `providers.tf`, w którym zdefiniujesz dostawce potrzebnego do napisania kodu modułu. 
+   Ponieważ provider może byc przekazany z poziomu, na którym wywoływany będzie moduł, wystarczy konfiguracja bloku `required_providers`.
+   W tym celu najprościej będzie skopiować obecny już plik *providers.tf*. Blok provider nie będzie w tym przypadku konieczny, ponieważ domyślnie
+   zostanie wykorzystany provider zdefiniowany w głównym katalogu, z którego korzystaliśmy do tej pory.
+3. Stwórz plik `variables.tf` ze zmienną wymienioną na początku zadania. Nadaj jej odpowiedni typ czyli zwykły`string`.
 4. Stwórz plik `main.tf`, w którym zdefiniujesz wszystkie zasoby wymiemione w treści zadania.
-5. Stwórz zasób sieci, oraz 2 zasoby pering'u z siecią `vnet-shared`. Sieć będzie odpowiadać poszczególnym środowiskom, 
-   dlatego możesz nadać jej nazwę w Terraformie jako "env" np. `resource "azurerm_virtual_network" "env"` Nazwa samego zasobu
-   powinna być przekazana za pomoca zmiennej. Nazwa peering'u również powinna zawierać zmienną użytą do nadania nazwy sieci.
+5. Stwórz zasób sieci, oraz 2 zasoby pering'u z siecią `vpc-shared`. Sieć będzie odpowiadać poszczególnym środowiskom, dlatego możesz 
+   nadać jej nazwę w Terraformie jako "env" np. `resource "google_compute_network" "env"`. Nazwa samego zasobu powinna zawierać nazwę środowiska, 
+   dlatego należy w niej umieścić odniesienie do zmiennej. Nazwa peering'u również powinna zawierać zmienną użytą do nadania nazwy sieci. 
    Pozwoli to udynamicznić moduł i w konsekwencji użyć go do tworzenia sieci dla wielu środowisk.
-6. W głównym katalogu, w którym stworzysz kod do pozostałych zadań stwórz nowy plik `network-env.tf`.
-7. W nowym pliku zdefiniuj wywołanie modułu, który stworzyłeś. Pamiętaj o wskazaniu źródła (source), czyli ścieżki do
-   folderu, w którym skonfigurowałeś kod modułu. Ponadto zapisz argument `providers` tak aby przekazać konfigurację
-   providera do modułu, np.
-
-   ```terraform
-   providers = {
-      azurerm.network = azurerm
-   }
-   ```
-   Pamiętaj również o wypisaniu w postaci argumentów wszystkich zmiennych zdefiniowanych wewnątrz modułu. Terraform będzie
-   potrzebował tych wartości aby wywołać moduł.
-8. Standardowo uruchom polecenia `terraform plan` aby zweryfikować swoją konifgurację oraz `terraform apply` aby wdrożyć zmiany.
-9. Sprawdź konfigurację stworzonych zasobów. Spróbuj odnaleźć je w pliku stanu. Zwróć uwagę jak wygląda ich referencja.
+6. W celu odwołania się do atrybutu *self_link* dla sieci `vpc-shared` (co jest potrzebne do konfiguracji peering'u) skorzystaj z bloku typu data,
+   za pomoca którego pobierzesz informacje odnośnie wspomnianej sieci.
+7. W katalogu modułu stwórz również plik `outputs.tf`, a w nim blok output, w którym jako wartość przekażesz cały zasób sieci.
+8. W głównym katalogu, w którym stworzysz kod do pozostałych zadań przejdź do pliku od sieci lub stwórz nowy plik np. `network-env.tf`.
+9. Zefiniuj wywołanie modułu, który stworzyłeś/aś. Pamiętaj o wskazaniu źródła (source), czyli ścieżki do folderu, w którym skonfigurowałeś/aś kod modułu. 
+   Pamiętaj również o przypisaniu wartości do zmiennej zdefiniowanej wewnątrz modułu. Terraform będzie potrzebował tej wartości aby wywołać moduł. Spróbuj wywołać
+   moduł 2 razy: odpowiednio dla środowisk *dev* oraz *prod*.
+10. Standardowo uruchom polecenia `terraform init` aby zinicjalizować moduł, `terraform plan` aby zweryfikować swoją konifgurację oraz `terraform apply` aby wdrożyć zmiany.
+11. Sprawdź konfigurację stworzonych zasobów. Spróbuj odnaleźć je w pliku stanu. Zwróć uwagę jak wygląda ich referencja.
+12. *** Zwróć uwagę na to, że nowy moduł, podobnie jak w przypadku zwykłego zasobu sieci vpc, potrzebuje włączonego odpowiedniego API aby móc
+   powołać zasoby sieci. Na tym etapie pisania kodu ten fakt może łatwo umknąć uwadze dewelopera ale w przypadku odtwarzania całej infarstruktury od zera
+   brak zależności prawdopodobnie będzie skutkowac błędem. W tym celu wykorzystaj argument `depends_on` aby obłużyć taki scenariusz.
 
 Pomocne linki:
 
-* [Zasób Virtual Network](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network)
-* [Zasób Virtual Network Peering](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network_peering)
+* [Zasób google_compute_network](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_network)
+* [Zasób google_compute_network_peering](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_network_peering)
 
 ## Zadanie 3 - Subnet/Network Security Group
 
 Celetem tego zadania jest nauka tworzenia i wykorzystania bardziej rozbudowanych modułów.
 
-W ramach tego zadania należy rozbudować moduł stworzony w poprzenim zadaniu. Dla tworzonej sieci należy zdefiniować
+W ramach tego zadania należy rozbudować moduł stworzony w poprzednim zadaniu. Dla tworzonej sieci należy zdefiniować
 3 podsieci: `app`, `data` oraz `endpoint`. Ponadto podsieć `data` powinna być skonfigurowana z tzw. service delegation
 dla usługi `Microsoft.DBforPostgreSQL/flexibleServers`.
 Dodatkowo do każdej z podsieci powinna być stworzona i przypięta osobna instancja Network Security Group.
