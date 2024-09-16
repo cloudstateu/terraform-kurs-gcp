@@ -9,6 +9,7 @@ w regionie, którego uzywasz dla większości zasobów oraz wskaz odpowiedni rod
 Nazwy zasobów mogą byc dowolne. Powstałe adresy wyświetl za pomoca bloku `output`.
  
 Aby zrealizować to zadanie, należy wykonać następujące kroki:
+
 1. Utwórz nowy plik i nazwij go np. `vm.tf` - adresy wykorzystamy dalje do tworzenia maszyny wirtualnej.
 2. W nowym pliku stwórz blok module i korzystając z dokumentacji utwórz 2 nowe adresy IP.
 3. Podczas tworzenia adresów wstaw odpowiednie parametry aby stworzyc zasób w Twoim pojekcie, w regionie, którego używasz dla 
@@ -98,3 +99,10 @@ Aby zrealizować to zadanie, należy wykonać następujące kroki:
 
 * [Zasób google_compute_instance](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance)
 * [Zasób google_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_service_account)
+
+## Zadanie 4 - Provider Random (Zadanie opcjonalne)
+
+Stwórz bazę PostgreSQL w wersji 15 oraz swojego użytkownika dla tej bazy. Użyj providera `random` do wygenerowania hasła dla swojego użytkownika. Powinno zawierać ono
+łącznie 15 znaków, minimum 5 znaków numerycznych oraz znaki specjalne. Tak wygenerowane hasło przekaż do konfiguracji swojego użytkownika.
+
+Spróbuj samemu znaleźć dokumentację potrzebnych zasobów.
