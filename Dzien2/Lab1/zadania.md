@@ -8,6 +8,7 @@ Zmienna powinna mieć typ `map(string)` i zawierać prywatne strefy DNS reprezen
 - Kraków
 - Warszawa
 - Gdańsk
+
 Nazwy stref powinny być tworzone według wzoru *<NAZWA_MIASTA>.kurstf.com.* np. `warszawa.kurstf.com`.
 Następnie przy pomocy pętli `for_each` należy utworzyć prywatne strefy DNS przypisane do stworzonej już sieci wirtualnej.
 W opisie każdej strefy odwołaj sie do jej pełnej nazwy lub klucza użytego w zmiennej, a także do nazwy sieci wirtualnej.
