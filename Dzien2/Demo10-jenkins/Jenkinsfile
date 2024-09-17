@@ -12,7 +12,7 @@ pipeline {
     environment {
         TF_IN_AUTOMATION = true
         GOOGLE_CREDENTIALS = credentials('GOOGLE_CREDENTIALS')
-        BACKEND_NETWORK_CONFIG = credentials('BACKEND_NETWORK_CONFIG')
+        BACKEND_CONFIG = credentials('BACKEND_CONFIG')
         TF_VAR_environment_name = "${params.environment_name}"
     }
 
@@ -20,7 +20,7 @@ pipeline {
         stage('Terraform Init & Validate') {
             steps {
                 dir("Dzien2/Demo10-jenkins/tf") {
-                    sh script: 'terraform init -backend-config="$BACKEND_NETWORK_CONFIG"', label: "Terraform Init"
+                    sh script: 'terraform init -backend-config="$BACKEND_CONFIG"', label: "Terraform Init"
                 }
             }
         }
