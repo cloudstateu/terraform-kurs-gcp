@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+    tools {
+        terraform "Terraform"
+    }
+
+    parameters {
+        string(name: 'environment_name', defaultValue: 'prod')
+    }
+
+    environment {
+        TF_IN_AUTOMATION = true
+        GOOGLE_CREDENTIALS = credentials('GOOGLE_CREDENTIALS')
+        BACKEND_NETWORK_CONFIG = credentials('BACKEND_NETWORK_CONFIG')
+        TF_VAR_environment_name = "${params.environment_name}"
+    }
+
+    stages {
+        stage('Terraform Init & Validate') {
+            steps {
+                dir("Dzien2/Demo10-jenkins/tf") {
+                    sh script: 'terraform init -backend-config="$BACKEND_NETWORK_CONFIG"', label: "Terraform Init"
+                }
+            }
+        }
+        stage('Terraform: Plan') {
+            steps {
+                dir("Dzien2/Demo10-jenkins/tf") {
+                    sh script: 'terraform plan -out=tfplan', label: "Terraform Plan"
+                }
+            }
+        }
+        stage('Terraform: Approve Apply') {
+            steps {
+                script {
+                    def userInput = input(id: 'confirm', message: 'Apply Terraform?', parameters: [[$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Apply terraform', name: 'confirm']])
+                }
+            }
+        }
+        stage('Terraform: Apply') {
+            steps {
+                dir("Dzien2/Demo10-jenkins/tf") {
+                    sh script: 'terraform apply tfplan', label: "Terraform Apply"
+                }
+            }
+        }
+    }
+}
